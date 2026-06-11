@@ -59,7 +59,7 @@ const router = createRouter({
       path: '/users/:id',
       name: 'user-overview',
       component: UserDetailView,
-      meta: { requiresAuth: true, role: 'EMPLOYEE' }
+      meta: { requiresAuth: true}
     },
     {
       path: '/accounts',

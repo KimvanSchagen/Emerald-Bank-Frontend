@@ -1,51 +1,84 @@
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useUserStore } from "@/stores/users.js";
 import { useTransactionStore } from "@/stores/transactions.js";
+import { useAuthStore } from "@/stores/auth.js";
 import Navigation from "@/components/Navigation.vue";
 
 const route = useRoute();
 
+const authStore = useAuthStore();
 const userStore = useUserStore();
 const transactionStore = useTransactionStore();
 
 const selectedAccountId = ref(null);
 
-onMounted(async () => {
-  const user = await userStore.fetchUser(route.params.id);
+const activeUser = computed(() => {
+  return authStore.user?.role === "CUSTOMER"
+    ? authStore.user
+    : userStore.user;
+});
 
-  if (user?.accounts?.length) {
-    selectedAccountId.value = user.accounts[0].id;
+const totalBalance = computed(() => {
+  if (!activeUser.value?.accounts) return 0;
+
+  return activeUser.value.accounts.reduce((sum, acc) => {
+    return sum + (acc.balance || 0);
+  }, 0);
+});
+
+onMounted(async () => {
+  let user;
+
+  // CUSTOMER → use /me (authStore already holds it)
+  if (authStore.user?.role === "CUSTOMER") {
+    user = authStore.user;
   }
+
+  // EMPLOYEE → load user by id
+  else {
+    user = await userStore.fetchUser(route.params.id);
+  }
+
+  if (!user?.accounts?.length) return;
+
+  selectedAccountId.value = user.accounts[0].id;
+
+  await transactionStore.fetchTransactionsByAccount(
+    selectedAccountId.value,
+    0
+  );
 });
 
 watch(selectedAccountId, (id) => {
-  if (id) {
-    transactionStore.fetchTransactionsByAccount(id, 0);
-  }
+  if (!id) return;
+
+  transactionStore.fetchTransactionsByAccount(id, 0);
 });
 </script>
 
 <template>
   <Navigation />
 
-  <section v-if="userStore.user">
-    <h1>{{ userStore.user.fullName }}</h1>
+  <section v-if="activeUser">
+    <h1>{{ activeUser.fullName }}</h1>
 
-    <p>Email: {{ userStore.user.email }}</p>
-    <p>Phone: {{ userStore.user.phoneNumber }}</p>
-    <p>BSN: {{ userStore.user.bsnNumber }}</p>
+    <p>Email: {{ activeUser.email }}</p>
+    <p>Phone: {{ activeUser.phoneNumber }}</p>
+    <p>BSN: {{ activeUser.bsnNumber }}</p>
+
+    <p><strong>Total Balance:</strong> € {{ totalBalance.toFixed(2) }}</p>
 
     <h3>Accounts</h3>
 
     <select v-model="selectedAccountId">
       <option
-        v-for="acc in userStore.user.accounts"
+        v-for="acc in activeUser.accounts"
         :key="acc.id"
         :value="acc.id"
       >
-        {{ acc.type }} - {{ acc.iban }} ({{ acc.balance }} €)
+        {{ acc.type }} - {{ acc.iban }} (€ {{ acc.balance }})
       </option>
     </select>
 

@@ -4,6 +4,7 @@ import api from "@/apiClient.js";
 export const useUserStore = defineStore("users", {
   state: () => ({
     users: [],
+    user: null,
     loading: false,
     error: null,
   }),

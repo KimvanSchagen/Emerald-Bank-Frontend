@@ -19,6 +19,9 @@ const handleLogout = () => {
     <li><RouterLink to="/">Home</RouterLink></li>
     <template v-if="authStore.user?.approved !== false">
       <li v-if="authStore.user?.role === 'CUSTOMER'">
+        <RouterLink :to="`/users/${authStore.user?.id}`">My Details</RouterLink>
+      </li>
+      <li v-if="authStore.user?.role === 'CUSTOMER'">
         <RouterLink to="/accounts/overview">Accounts</RouterLink>
       </li>
       <li v-if="authStore.user?.role === 'EMPLOYEE'">
