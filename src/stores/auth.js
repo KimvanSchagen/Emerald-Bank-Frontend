@@ -1,7 +1,5 @@
 import {defineStore} from "pinia";
-import axios from "axios";
-import {API_ENDPOINTS} from "@/config.js";
-import {setAuthToken} from "@/utils/auth.js";
+import api, {setAuthToken} from "@/apiClient.js";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
@@ -20,7 +18,7 @@ export const useAuthStore = defineStore("auth", {
       if (!this.token) return;
 
       try {
-        const response = await axios.get(`${API_ENDPOINTS.users}/me`);
+        const response = await api.get("/users/me");
         this.user = response.data;
         return response;
       } catch (error) {
@@ -33,8 +31,7 @@ export const useAuthStore = defineStore("auth", {
       this.error = null;
 
       try {
-        const response = await axios.post(
-          `${API_ENDPOINTS.auth}/register`,
+        const response = await api.post("/auth/register",
           credentials
         );
 
@@ -56,8 +53,7 @@ export const useAuthStore = defineStore("auth", {
       this.error = null;
 
       try {
-        const response = await axios.post(
-          `${API_ENDPOINTS.auth}/login`,
+        const response = await api.post("/auth/login",
           credentials
         );
 
@@ -79,7 +75,7 @@ export const useAuthStore = defineStore("auth", {
       this.token = null;
       this.user = null;
       localStorage.removeItem("token");
-      delete axios.defaults.headers.common["Authorization"];
+      setAuthToken(null);
     },
 
     async initializeAuth() {
