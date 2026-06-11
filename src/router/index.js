@@ -7,6 +7,8 @@ import CustomerAccountView from "@/views/customer-account/CustomerAccountView.vu
 import {useAuthStore} from "@/stores/auth.js";
 import TransactionsView from "@/views/transactions/TransactionsView.vue";
 import UsersView from "@/views/users/UsersView.vue";
+import AccountsView from "@/views/accounts/AccountsView.vue";
+import UserDetailView from "@/views/users/UserDetailView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -51,6 +53,18 @@ const router = createRouter({
       path: '/users',
       name: 'users',
       component: UsersView,
+      meta: { requiresAuth: true, role: 'EMPLOYEE' }
+    },
+    {
+      path: '/users/:id',
+      name: 'user-overview',
+      component: UserDetailView,
+      meta: { requiresAuth: true, role: 'EMPLOYEE' }
+    },
+    {
+      path: '/accounts',
+      name: 'accounts',
+      component: AccountsView,
       meta: { requiresAuth: true, role: 'EMPLOYEE' }
     },
     {
