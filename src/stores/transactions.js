@@ -35,6 +35,29 @@ export const useTransactionStore = defineStore("transactions", {
       } finally {
         this.loading = false;
       }
-    }
+    },
+
+    async fetchTransactionsByAccount(accountId, page = 0) {
+      this.loading = true;
+      this.error = null;
+
+      try {
+        const { data } = await api.get(`/transactions/account/${accountId}`, {
+          params: { page, size: 10 }
+        });
+
+        this.transactions = data.content;
+        this.page = data.number;
+        this.totalPages = data.totalPages;
+
+      } catch (error) {
+        this.error =
+          error?.response?.data?.message ||
+          error.message ||
+          "Something went wrong";
+      } finally {
+        this.loading = false;
+      }
+    },
   }
 })

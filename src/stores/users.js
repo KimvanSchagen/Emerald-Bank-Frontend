@@ -9,6 +9,24 @@ export const useUserStore = defineStore("users", {
   }),
 
   actions: {
+    async fetchUser(id) {
+      this.loading = true;
+      this.error = null;
+
+      try {
+        const { data } = await api.get(`/users/${id}`);
+        this.user = data;
+        return data;
+      } catch (error) {
+        this.error =
+          error?.response?.data?.message ||
+          error.message ||
+          "Something went wrong";
+      } finally {
+        this.loading = false;
+      }
+    },
+
     async fetchNotApprovedUsers(){
       this.loading = true;
       this.error = null;
