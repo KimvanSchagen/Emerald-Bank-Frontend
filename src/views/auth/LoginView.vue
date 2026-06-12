@@ -22,25 +22,27 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <h1>Emerald Bank</h1>
+  <section class="container login-register">
+    <h1>Emerald Bank</h1>
 
-  <section>
-    <form @submit.prevent="handleSubmit">
-      <article aria-busy="true" v-if="isLoading"></article>
-      <p v-if="error" class="error">{{ error }}</p>
-      <fieldset>
-        <label>
-          Email
-          <input type="email" name="email" placeholder="Email" aria-label="Email" autocomplete="email" v-model="formData.email" required>
-        </label>
-        <label>
-          Password
-          <input type="password" name="password" placeholder="Password" aria-label="Password" v-model="formData.password" required>
-        </label>
-      </fieldset>
+    <section>
+      <form @submit.prevent="handleSubmit">
+        <article aria-busy="true" v-if="isLoading"></article>
+        <p v-if="error" class="error">{{ error }}</p>
+        <fieldset>
+          <label>
+            Email
+            <input type="email" name="email" placeholder="Email" aria-label="Email" autocomplete="email" v-model="formData.email" required>
+          </label>
+          <label>
+            Password
+            <input type="password" name="password" placeholder="Password" aria-label="Password" v-model="formData.password" required>
+          </label>
+        </fieldset>
 
-      <input type="submit" value="Login"/>
-    </form>
-    <RouterLink to="/register">First time here? Create your account</RouterLink>
+        <input type="submit" value="Login"/>
+      </form>
+      <RouterLink to="/register">First time here? Create your account</RouterLink>
+    </section>
   </section>
 </template>
