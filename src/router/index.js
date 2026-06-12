@@ -2,13 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from "@/views/auth/LoginView.vue";
 import RegisterView from "@/views/auth/RegisterView.vue";
 import DashboardView from "@/views/dashboard/DashboardView.vue";
-import CustomerAccountsOverview from "@/views/customer-account/CustomerAccountsOverview.vue";
-import CustomerAccountView from "@/views/customer-account/CustomerAccountView.vue";
 import {useAuthStore} from "@/stores/auth.js";
 import TransactionsView from "@/views/transactions/TransactionsView.vue";
 import UsersView from "@/views/users/UsersView.vue";
 import AccountsView from "@/views/accounts/AccountsView.vue";
 import UserDetailView from "@/views/users/UserDetailView.vue";
+import ATMView from "@/views/ATM/ATMView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,18 +29,6 @@ const router = createRouter({
       name: 'dashboard',
       component: DashboardView,
       meta: { requiresAuth: true }
-    },
-    {
-      path: '/accounts/overview',
-      name: 'accounts-overview',
-      component: CustomerAccountsOverview,
-      meta: { requiresAuth: true, role: 'CUSTOMER' }
-    },
-    {
-      path: '/accounts/:id',
-      name: 'account-view',
-      component: CustomerAccountView,
-      meta: { requiresAuth: true, role: 'CUSTOMER' }
     },
     {
       path: '/transactions',
@@ -66,6 +53,12 @@ const router = createRouter({
       name: 'accounts',
       component: AccountsView,
       meta: { requiresAuth: true, role: 'EMPLOYEE' }
+    },
+    {
+      path: '/atm',
+      name: 'atm',
+      component: ATMView,
+      meta: { requiresAuth: true, role: 'CUSTOMER' }
     },
     {
       path: "/:pathMatch(.*)*",

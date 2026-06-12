@@ -22,7 +22,7 @@ const handleLogout = () => {
         <RouterLink :to="`/users/${authStore.user?.id}`">My Details</RouterLink>
       </li>
       <li v-if="authStore.user?.role === 'CUSTOMER'">
-        <RouterLink to="/accounts/overview">Accounts</RouterLink>
+        <RouterLink to="/atm">ATM</RouterLink>
       </li>
       <li v-if="authStore.user?.role === 'EMPLOYEE'">
         <RouterLink to="/users">Users</RouterLink>

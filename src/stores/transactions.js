@@ -59,5 +59,45 @@ export const useTransactionStore = defineStore("transactions", {
         this.loading = false;
       }
     },
+    async deposit(accountId, amount) {
+      this.loading = true;
+      this.error = null;
+
+      try {
+        const { data } = await api.post("/transactions/deposit", {
+          toAccount: { id: accountId},
+          amount
+        });
+
+        return data;
+      } catch (error) {
+        this.error = error?.response?.data?.message ||
+          "Deposit failed";
+      } finally {
+        this.loading = false;
+      }
+    },
+    async withdraw(accountId, amount) {
+      this.loading = true;
+      this.error = null;
+
+      try {
+        const { data } = await api.post("/transactions/withdraw", {
+          fromAccount: { id: accountId },
+          amount
+        });
+
+        return data;
+      } catch (error) {
+        this.error =
+          error?.response?.data?.message ||
+          error?.response?.data?.error ||
+          error?.response?.data ||
+          error.message ||
+          "Something went wrong";
+      } finally {
+        this.loading = false;
+      }
+    },
   }
 })
