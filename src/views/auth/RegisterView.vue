@@ -31,7 +31,7 @@ async function handleSubmit() {
   <section>
     <form @submit.prevent="handleSubmit">
       <article aria-busy="true" v-if="isLoading"></article>
-      <p v-if="error">{{ error }}</p>
+      <p v-if="error" class="error">{{ error }}</p>
       <fieldset>
         <fieldset class="grid">
           <label>

@@ -8,6 +8,7 @@ import UsersView from "@/views/users/UsersView.vue";
 import AccountsView from "@/views/accounts/AccountsView.vue";
 import UserDetailView from "@/views/users/UserDetailView.vue";
 import ATMView from "@/views/ATM/ATMView.vue";
+import TransferView from "@/views/transactions/TransferView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -53,6 +54,12 @@ const router = createRouter({
       name: 'accounts',
       component: AccountsView,
       meta: { requiresAuth: true, role: 'EMPLOYEE' }
+    },
+    {
+      path: '/transfer',
+      name: 'transfer',
+      component: TransferView,
+      meta: { requiresAuth: true }
     },
     {
       path: '/atm',

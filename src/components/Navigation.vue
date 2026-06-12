@@ -33,6 +33,9 @@ const handleLogout = () => {
       <li v-if="authStore.user?.role === 'EMPLOYEE'">
         <RouterLink to="/transactions">Transactions</RouterLink>
       </li>
+      <li>
+        <RouterLink to="/transfer">Transfer</RouterLink>
+      </li>
     </template>
     <li v-if="authStore.isAuthenticated">
       <a @click="handleLogout">Logout</a>

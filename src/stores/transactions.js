@@ -59,6 +59,34 @@ export const useTransactionStore = defineStore("transactions", {
         this.loading = false;
       }
     },
+
+    async transfer(fromAccountId, toAccountId, amount) {
+      this.loading = true;
+      this.error = null;
+
+      try {
+        const { data } = await api.post("/transactions/transfer", {
+          fromAccount: {
+            id: fromAccountId
+          },
+          toAccount: {
+            id: toAccountId
+          },
+          amount
+        });
+
+        return data;
+      } catch (error) {
+        this.error =
+          error?.response?.data?.message ||
+          error?.response?.data?.error ||
+          error?.message ||
+          "Transfer failed";
+      } finally {
+        this.loading = false;
+      }
+    },
+
     async deposit(accountId, amount) {
       this.loading = true;
       this.error = null;
