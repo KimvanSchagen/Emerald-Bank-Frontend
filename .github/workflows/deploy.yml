@@ -1,0 +1,61 @@
+name: Deploy Vue App to GitHub Pages
+
+# Run this workflow (script) when something is pushed to the main branch
+on:
+  push:
+    branches: ["main"] # Change this to what your main branch is called (if it's not called main)
+  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+# What will be done once the workflow is started
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      # npm ci stands for npm clean install, it installs dependencies exactly as specified in the package-lock.json file
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build the app
+        run: npm run build
+        # Fetch the VITE_API_DOMAIN environment variable
+        env:
+          VITE_API_DOMAIN: ${{ vars.VITE_API_DOMAIN }}
+
+      # ./dist is where the production build will be written to, this is similar to what happens when you run npm run dev locally
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
